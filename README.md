@@ -1,5 +1,7 @@
 # WriteCode
 
+![Screenshoit](screenshot.png)
+
 ## Installation locale avec Docker
 
 **Attention ! Docker doit être installé sur la machine pour que les commandes ci-dessous puissent fonctionner**
