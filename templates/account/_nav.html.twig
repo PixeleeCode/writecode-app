@@ -1,0 +1,29 @@
+{# Navigation #}
+<nav class="border-b border-gray-200 pb-4 dark:border-gray-600">
+    <ul class="text-gray-500 space-y-2 sm:space-y-0 sm:flex sm:items-center sm:space-x-16 dark:text-white">
+        <li>
+            <a href="{{ path('account_index') }}"
+               title="Mes informations" aria-label="Mes informations"
+               class="{{ app.request.attributes.get('_route') is same as('account_index') ? 'text-red-500' : 'hover:text-red-500 transition ease-in' }}"
+            >
+                Informations personnelles
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('account_password') }}"
+               title="Mon mot de passe" aria-label="Mon mot de passe"
+               class="{{ app.request.attributes.get('_route') is same as('account_password') ? 'text-red-500' : 'hover:text-red-500 transition ease-in' }}"
+            >
+                Mot de passe
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('account_invoices') }}"
+               title="Mes factures" aria-label="Mes factures"
+               class="{{ app.request.attributes.get('_route') is same as('account_invoices') ? 'text-red-500' : 'hover:text-red-500 transition ease-in' }}"
+            >
+                Mes factures
+            </a>
+        </li>
+    </ul>
+</nav>

@@ -1,0 +1,134 @@
+{% extends 'layouts/admin/default.html.twig' %}
+
+{# Thème formulaire pour la collection (chapitres) #}
+{% form_theme form 'admin/training/_training_chapters_entry_row.html.twig' %}
+
+{% block title %}Édition de "{{ training.name }}" - {{ parent() }}{% endblock %}
+
+{% block body %}
+    {{ form_start(form, { 'attr': { 'id': 'form-admin' }}) }}
+        <div class="h-44 bg-gray-100 my-auto pt-16">
+            <div class="pl-20 w-4/5">
+                <div class="flex justify-between">
+                    <div class="flex items-center">
+                        <a href="{{ path('admin_training_list') }}" class="text-red-500 hover:text-red-300 transition ease-in-out mt-1 mr-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-7 w-7">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                        </a>
+                        <h1 class="text-5xl text-gray-700">Édition d'une formation</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <a href="{{ path('admin_training_list') }}" class="btn btn-outline my-auto py-3">Annuler</a>
+                        <button class="btn btn-green my-auto py-3">Sauvegarder les changements</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Formulaire de modification d'une technologie #}
+        <section class="pt-12 pl-20 w-4/5">
+
+            {# Alerte en cas de succès #}
+            {% include 'components/_alert.html.twig' with { 'flashes': app.flashes('success'), 'type': 'success' } only %}
+
+            <div class="flex items-start space-x-6">
+                <div class="w-8/12">
+                    <div class="mb-6">
+                        {{ form_label(form.name) }}
+                        {{ form_widget(form.name) }}
+                        <span class="errors">{{ form_errors(form.name) }}</span>
+                        <p class="pt-1">
+                            {% if training.redirectPermanentlies|length >= 1 %}
+                                {% for redirect in training.redirectPermanentlies %}
+                                    <a href="{{ url('trainings_show', {slug: redirect.oldSlug}) }}" class="text-sm text-blue-600 hover:text-blue-300">
+                                        {{ url('trainings_show', {slug: redirect.oldSlug}) }}
+                                    </a>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                {% endfor %}
+                            {% endif %}
+                            <a href="{{ url('trainings_show', {slug: training.slug}) }}" class="text-sm text-blue-600 hover:text-blue-300">
+                                {{ url('trainings_show', {slug: training.slug}) }}
+                            </a>
+                        </p>
+                    </div>
+                    <div class="mb-6">
+                        {{ form_label(form.description) }}
+                        {{ form_widget(form.description, { 'attr': { 'rows': 10, 'maxlength': 255 }}) }}
+                        <span class="errors">{{ form_errors(form.description) }}</span>
+                    </div>
+                    <div class="mb-6">
+                        {{ form_label(form.infos) }}
+                        {{ form_widget(form.infos) }}
+                        <span class="errors">{{ form_errors(form.infos) }}</span>
+                        <span class="block text-sm text-gray-400 mt-1">
+                            Écrire en markdown. Besoin d’aide ?
+                            <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" class="block text-blue-500 group-hover:text-blue-300">
+                                https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
+                            </a>
+                        </span>
+                    </div>
+                </div>
+                <div class="w-4/12">
+                    <h2 class="text-2xl font-bold mb-4">Informations</h2>
+
+                    <div class="mb-6">
+                        {{ form_label(form.picture) }}
+                        <img src="{{ asset_image(asset('uploads/trainings/'~ training.picture), { 'w': 350, 'h': 220 }) }}" id="preview" alt="Preview" class="rounded w-full">
+                        <label class="w-full pt-4 cursor-pointer">
+                            <span class="mt-2 leading-normal text-blue-500 hover:text-blue-300">Modifier l'image</span>
+                            {{ form_widget(form.picture, { 'attr': { 'class': 'hidden' }}) }}
+                        </label>
+                        <span class="errors">{{ form_errors(form.picture) }}</span>
+                        <span class="text-sm text-gray-400">Taille : 1280x800px. Poids: 1Mo max.</span>
+                    </div>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <h2 class="text-2xl font-bold mb-4 pt-6">Notifications</h2>
+                        <div class="w-3/4 mb-6 flex items-center space-x-6">
+                            {{ form_label(form.notifications) }}
+                            <label for="training_notifications" class="flex items-center cursor-pointer mt-1">
+                                <div class="relative">
+                                    {{ form_widget(form.notifications, { 'attr': { 'class': 'hidden' }}) }}
+                                    <!-- inner line -->
+                                    <div class="toggle_line w-10 h-4 bg-gray-200 rounded-full shadow-inner"></div>
+                                    <!-- dot -->
+                                    <div class="toggle_dot absolute w-6 h-6 bg-white rounded-full shadow inset-y-0 left-0"></div>
+                                </div>
+                            </label>
+                            <span class="errors">{{ form_errors(form.notifications) }}</span>
+                        </div>
+                        <div class="mb-6" data-controller="prototype" data-prototype="{{ form_row(form.chapters.vars.prototype)|e('html_attr') }}">
+                            <label>Chapitres de la formation</label>
+                            <p class="text-gray-400 text-sm mb-6">L'ordre ci-dessous correspond à l'ordre des chapitres</p>
+                            <div data-controller="sortable" data-sortable-handle-value=".handle">
+                                {{ form_row(form.chapters) }}
+                            </div>
+                            <button type="button" data-action="prototype#addChapter" class="btn btn-blue py-3 mt-4" data-index="0">
+                                Ajouter un nouveau chapitre
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+    {{ form_end(form) }}
+
+    <section data-controller="modal" class="ml-20 mb-20 pt-6 w-4/5">
+        <h3 class="text-4xl font-bold border-b border-gray-300 mb-6 pb-2">
+            Actions
+        </h3>
+        {% if is_granted('ROLE_ADMIN') %}
+            <button type="button" data-action="modal#show_delete" class="btn btn-red">
+                Supprimer cette formation
+            </button>
+            {% include 'components/modal/_delete_training.html.twig' %}
+        {% endif %}
+        {% if training.chapters|length > 1 %}
+            <a href="{{ path('trainings_show', { slug: training.slug }) }}" class="btn btn-outline py-3">
+                Voir cette formation en ligne
+            </a>
+        {% endif %}
+    </section>
+{% endblock %}

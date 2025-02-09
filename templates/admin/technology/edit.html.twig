@@ -1,0 +1,88 @@
+{% extends 'layouts/admin/default.html.twig' %}
+
+{% block title %}Édition de "{{ technology.name }}" - {{ parent() }}{% endblock %}
+
+{% block body %}
+    {{ form_start(form, { 'attr': { 'id': 'form-admin' }}) }}
+        <div class="h-44 bg-gray-100 my-auto pt-16">
+            <div class="pl-20 w-4/5">
+                <div class="flex justify-between">
+                    <div class="flex items-center">
+                        <a href="{{ path('admin_technology_list') }}" class="text-red-500 hover:text-red-300 transition ease-in-out mt-1 mr-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-7 w-7">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                        </a>
+                        <h1 class="text-5xl text-gray-700">Édition d'une technologie</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <a href="{{ path('admin_technology_list') }}" class="btn btn-outline my-auto py-3">Annuler</a>
+                        <button class="btn btn-green my-auto py-3">Sauvegarder les changements</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Formulaire de modification d'une technologie #}
+        <section class="pt-12 pl-20 w-4/5">
+
+            {# Alerte en cas de succès #}
+            {% include 'components/_alert.html.twig' with { 'flashes': app.flashes('success'), 'type': 'success' } only %}
+
+            <div class="flex items-start space-x-6">
+                <div class="w-9/12">
+                    <div class="mb-6">
+                        {{ form_label(form.name) }}
+                        {{ form_widget(form.name) }}
+                        <span class="errors">{{ form_errors(form.name) }}</span>
+                        <p class="pt-1">
+                            {% if technology.redirectPermanentlies|length >= 1 %}
+                                {% for redirect in technology.redirectPermanentlies %}
+                                    <a href="{{ url('course_technologie', {slug: redirect.oldSlug}) }}" class="text-sm text-blue-600 hover:text-blue-300">
+                                        {{ url('course_technologie', {slug: redirect.oldSlug}) }}
+                                    </a>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                {% endfor %}
+                            {% endif %}
+                            <a href="{{ url('course_technologie', {slug: technology.slug}) }}" class="text-sm text-blue-600 hover:text-blue-300">
+                                {{ url('course_technologie', {slug: technology.slug}) }}
+                            </a>
+                        </p>
+                    </div>
+                    <div class="mb-6">
+                        {{ form_label(form.description) }}
+                        {{ form_widget(form.description, { 'attr': { 'rows': 10, 'maxlength': 255 }}) }}
+                        <span class="errors">{{ form_errors(form.description) }}</span>
+                    </div>
+                </div>
+                <div class="w-3/12">
+                    <h2 class="text-2xl font-bold mb-4">Informations</h2>
+                    <div class="mb-6">
+                        {{ form_label(form.picture) }}
+                        <img src="{{ asset_image(asset('uploads/technologies/'~ technology.picture), { 'w': 256, 'h': 256 }) }}" id="preview" alt="Preview" class="rounded w-full mt-6">
+                        <label class="w-full pt-4 cursor-pointer">
+                            <span class="mt-2 leading-normal text-blue-500 hover:text-blue-300">Modifier l'image</span>
+                            {{ form_widget(form.picture, { 'attr': { 'class': 'hidden' }}) }}
+                        </label>
+                        <span class="errors">{{ form_errors(form.picture) }}</span>
+                        <span class="text-sm text-gray-400">Taille : 256x256px. Poids: 1Mo max.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    {{ form_end(form) }}
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <section data-controller="modal" class="ml-20 mb-20 pt-6 w-4/5">
+            <h3 class="text-4xl font-bold border-b border-gray-300 mb-6 pb-2">
+                Actions
+            </h3>
+            <button type="button" data-action="modal#show_delete" class="btn btn-red">
+                Supprimer cette technologie
+            </button>
+            {% include 'components/modal/_delete_technology.html.twig' %}
+        </section>
+    {% endif %}
+{% endblock %}

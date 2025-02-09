@@ -1,0 +1,25 @@
+{% extends 'layouts/auth/default.html.twig' %}
+
+{% block title %}Mot de passe oublié ? - {{ parent() }}{% endblock %}
+
+{% block body %}
+    {{ form_start(requestForm, { attr: { class: 'px-9 my-12 md:mx-auto md:w-2/3 xl:w-3/6 xl:my-24' }}) }}
+        <h1 class="text-3xl text-center font-bold m-12 lg:text-5xl dark:text-white">
+            Mot de passe oublié ?
+         </h1>
+
+        {# Alerte en cas d'erreur #}
+        {% include 'components/_alert.html.twig' with { 'flashes': app.flashes('reset_password_error'), 'type': 'error' } only %}
+        {% include 'components/_alert.html.twig' with { 'flashes': app.flashes('success'), 'type': 'success' } only %}
+
+        <p class="dark:text-white">Entres l’adresse email utilisée lors de ton inscription pour réinitialiser ton mot de passe.</p>
+
+        <div class="my-6 dark:text-gray-300">
+            {{ form_label(requestForm.email) }}
+            {{ form_widget(requestForm.email) }}
+            <span class="errors">{{ form_errors(requestForm.email) }}</span>
+        </div>
+
+        <button class="btn btn-gradient-red w-full py-3 mt-4">Envoyer les instructions</button>
+    {{ form_end(requestForm) }}
+{% endblock %}

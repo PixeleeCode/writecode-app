@@ -1,0 +1,60 @@
+{% extends 'layouts/auth/default.html.twig' %}
+
+{% block title %}Ouvrir un compte - {{ parent() }}{% endblock %}
+
+{% block body %}
+    {{ form_start(registrationForm, { attr: { class: 'px-9 my-12 md:mx-auto md:w-2/3 xl:w-3/6 xl:my-24' }}) }}
+        <h1 class="text-3xl text-center font-bold m-12 md:text-4xl lg:text-5xl dark:text-white">
+            Ouvrir un compte WriteCode
+        </h1>
+
+        {# Alerte en cas d'erreur #}
+        {% include 'components/_alert.html.twig' with { 'flashes': app.flashes('verify_email_error'), 'type': 'error' } only %}
+
+        <div class="sm:mb-6 sm:flex sm:space-x-6">
+            <div class="mb-6 sm:mb-0 sm:w-1/2 dark:text-gray-300">
+                {{ form_label(registrationForm.firstname) }}
+                {{ form_widget(registrationForm.firstname) }}
+                <span class="errors">{{ form_errors(registrationForm.firstname) }}</span>
+            </div>
+            <div class="mb-6 sm:mb-0 sm:w-1/2 dark:text-gray-300">
+                {{ form_label(registrationForm.lastname) }}
+                {{ form_widget(registrationForm.lastname) }}
+                <span class="errors">{{ form_errors(registrationForm.lastname) }}</span>
+            </div>
+        </div>
+        <div class="mb-6 dark:text-gray-300">
+            {{ form_label(registrationForm.email) }}
+            {{ form_widget(registrationForm.email) }}
+            <span class="errors">{{ form_errors(registrationForm.email) }}</span>
+        </div>
+        <div class="sm:mb-6 sm:flex sm:space-x-6">
+            <div class="mb-6 sm:mb-0 sm:w-1/2 dark:text-gray-300">
+                {{ form_label(registrationForm.password.first) }}
+                {{ form_widget(registrationForm.password.first) }}
+                <span class="errors">{{ form_errors(registrationForm.password.first) }}</span>
+            </div>
+            <div class="mb-6 sm:mb-0 sm:w-1/2 dark:text-gray-300">
+                {{ form_label(registrationForm.password.second) }}
+                {{ form_widget(registrationForm.password.second) }}
+                <span class="errors">{{ form_errors(registrationForm.password.second) }}</span>
+            </div>
+        </div>
+        <div class="mb-4">
+            {{ form_widget(registrationForm.notifications) }}
+            <label for="registration_form_notifications" class="inline ml-2 text-sm text-gray-500 dark:text-gray-300">
+                En soumettant ce formulaire, j'accepte de recevoir des notifications par email de WriteCode lors de l'ajout d'un nouvel article, d'une nouvelle formation ou lors de l'édition d'un article existant.
+            </label>
+        </div>
+        <div class="mb-4">
+            {{ form_widget(registrationForm.rgpd) }}
+            <label for="registration_form_rgpd" class="inline ml-2 text-sm text-gray-500 dark:text-gray-300">
+                En soumettant ce formulaire, j’accepte que WriteCode conserve mes données personnelles via ce formulaire. Aucune exploitation
+                commerciale ne sera faite des données conservées. <a href="{{ path('pages', { slug: 'politique-de-confidentialite' }) }}" title="Politique de confidentialité" aria-label="Politique de confidentialité" class="text-red-500 hover:text-red-400 transition ease-in">Voir notre politique de gestion des données personnelles.</a>
+            </label>
+            <span class="errors">{{ form_errors(registrationForm.rgpd) }}</span>
+        </div>
+
+        <button class="btn btn-gradient-red py-3 w-full mt-4">Créer mon compte</button>
+    {{ form_end(registrationForm) }}
+{% endblock %}

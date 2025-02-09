@@ -1,0 +1,56 @@
+{% extends 'layouts/admin/default.html.twig' %}
+
+{% block title %}Technologies - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="h-44 bg-gray-100 my-auto pt-16">
+        <div class="pl-20 w-4/5">
+            <div class="flex justify-between">
+                <h1 class="text-5xl text-gray-700">Technologies</h1>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('admin_technology_new') }}" class="btn btn-green my-auto py-3">Nouvelle technologie</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {# Liste des technologies #}
+    <section class="pl-20 pt-12 w-4/5">
+
+        {# Alerte en cas de succès #}
+        {% include 'components/_alert.html.twig' with { 'flashes': app.flashes('success'), 'type': 'success' } only %}
+
+        {% if technologies|length > 0 %}
+            <table class="w-full">
+                <tbody>
+                    {% for technology in technologies %}
+                        <tr class="border-b border-gray-200 hover:bg-gray-50">
+                            <td class="p-3 w-1/12">
+                                <img
+                                    data-controller="symfony--ux-lazy-image--lazy-image"
+                                    src="{{ asset('imgs/placeholder-75.svg') }}"
+                                    data-hd-src="{{ asset_image(asset('uploads/technologies/'~ technology.picture), { 'w': 75 }) }}"
+                                    alt="{{ technology.name }}" class="rounded-lg"
+                                >
+                            </td>
+                            <td class="text-left">
+                                <a href="{{ path('admin_technology_edit', { id: technology.id }) }}" class="text-blue-500 hover:text-blue-300">{{ technology.name }}</a>
+                            </td>
+                            <td class="pr-4 w-4/5">
+                                Description : <span class="text-gray-500">{{ technology.description }}</span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="float-left my-12">
+                {{ knp_pagination_render(technologies) }}
+            </div>
+        {% else %}
+            <div class="mt-28">
+                <p class="text-4xl font-black mb-6">Pas de technologies en vue 🤷‍</p>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

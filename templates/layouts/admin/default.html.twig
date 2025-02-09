@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="turbolinks-cache-control" content="no-cache" />
+        <title>{% block title %}Administration WriteCode{% endblock %}</title>
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('scss') }}
+        {% endblock %}
+        {% block javascripts %}
+            {{ encore_entry_script_tags('js') }}
+        {% endblock %}
+    </head>
+    <body class="overflow-hidden">
+        <div class="flex">
+            {% include 'layouts/admin/_nav.html.twig' %}
+            <div class="w-full h-screen overflow-auto">
+                {% block body %}{% endblock %}
+            </div>
+        </div>
+    </body>
+</html>

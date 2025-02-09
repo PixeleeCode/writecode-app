@@ -1,0 +1,55 @@
+<div class="container mx-auto px-4 pb-12">
+    {% if courses|length > 0 %}
+        <div class="grid grid-cols-1 gap-y-16 mb-12 sm:grid-cols-2 sm:gap-x-8 md:grid-cols-3 xl:grid-cols-4">
+            {% for course in courses %}
+                <div class="group">
+                    <a href="{{ path('course_show', { slug: course.slug }) }}">
+                        <img
+                            data-controller="symfony--ux-lazy-image--lazy-image"
+                            src="{{ asset('imgs/placeholder.svg') }}"
+                            data-hd-src="{{ asset_image(asset('uploads/courses/'~ course.picture), { 'w': 350, 'h': 220 }) }}"
+                            alt="{{ course.title }}"
+                            class="w-full rounded-lg"
+                            height="220" width="350"
+                        >
+                    </a>
+                    <div class="flex items-center justify-between mt-3 mb-2">
+                        <div class="w-1/2 truncate text-gray-600 dark:text-gray-400">
+                            {% for technology in course.technology %}
+                                <a href="{{ path('course_technologie', { slug: technology.slug}) }}" class="hover:text-red-500 transition ease-in">{{ technology.name }}</a>{% if not loop.last %},{% endif %}
+                            {% endfor %}
+                        </div>
+                        {% if course.premium %}
+                            <div class="w-1/3 text-right">
+                                <span class="flex items-center justify-center rounded-full text-yellow-700 bg-yellow-200 text-sm font-bold px-4 py-1 dark:bg-yellow-500 dark:text-yellow-900">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="2 0 20 18" fill="currentColor" class="w-5 h-5">
+                                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                    Premium
+                                </span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <a href="{{ path('course_show', { slug: course.slug }) }}"
+                       title="{{ course.title }}" aria-label="{{ course.title }}"
+                       class="text-xl font-medium hover:text-red-500 group-hover:text-red-500 transition ease-in dark:text-white"
+                    >
+                        {{ course.title }}
+                    </a>
+                    {% if chapter is defined %}
+                        <p class="text-gray-500 text-sm mt-4 dark:text-gray-400">Chapitre {{ course.chapters.first.position }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        {{ knp_pagination_render(courses) }}
+    {% else %}
+        <div class="mt-28">
+            <p class="text-5xl font-bold mb-6 xl:text-6xl dark:text-white">Oups ! Aucun tutoriel ici 🥲</p>
+            <p class="text-xl text-gray-500">
+                Ce n'est rien. <a href="{{ path('course_index') }}" class="text-blue-500 hover:text-blue-300 transition ease-in" title="Accueil" aria-label="Accueil">Retournes à la page d'accueil</a>, ici tu vas t'ennuyer...
+            </p>
+        </div>
+    {% endif %}
+</div>

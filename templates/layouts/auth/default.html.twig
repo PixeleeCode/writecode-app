@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="turbolinks-cache-control" content="no-cache" />
+        <meta property="og:title" content="{{ block('title') }}"/>
+        <meta property="og:site_name" content="WriteCode"/>
+        <meta property="og:language" content="fr"/>
+        <title>{% block title %}WriteCode{% endblock %}</title>
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('scss') }}
+        {% endblock %}
+        {% block javascripts %}
+            {{ encore_entry_script_tags('js') }}
+        {% endblock %}
+    </head>
+    <body class="relative min-h-full dark:bg-gray-800">
+        <div class="xl:flex">
+
+            {% if app.request.pathinfo is same as('/inscription') %}
+                {% set cover = 'cover_register.svg' %}
+            {% elseif app.request.pathinfo is same as('/connexion') %}
+                {% set cover = 'cover_login.svg' %}
+            {% elseif app.request.pathinfo is same as('/mot-de-passe/perdu') %}
+                {% set cover = 'cover_lost_password.svg' %}
+            {% else %}
+                {% set cover = 'cover_reset_password.svg' %}
+            {% endif %}
+
+            <div class="hidden w-1/2 bg-cover bg-center min-h-screen xl:inline" style="background-image: url({{ asset('imgs/auth/'~ cover) }})"></div>
+            <div class="relative container min-h-full mx-auto">
+                {% include 'layouts/auth/_header.html.twig' %}
+
+                <div class="container mx-auto pb-24">
+                    {% block body %}{% endblock %}
+                </div>
+
+                {% include 'layouts/_footer.html.twig' %}
+            </div>
+        </div>
+    </body>
+</html>

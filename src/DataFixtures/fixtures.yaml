@@ -1,0 +1,54 @@
+App\Entity\User:
+    user_{1..35}:
+        firstname: <firstName()>
+        lastname: <lastName()>
+        picture: "10%? <picture('public/uploads/users')>"
+        email (unique): <email()>
+        password: <password('secret')>
+        notifications: true
+        rgpd: true
+        created_at: <dateTimeBetween('-2 years', '-100 days')>
+    admin:
+        firstname: John
+        lastname: Doe
+        picture: <picture('public/uploads/users', 'men')>
+        email (unique): john.doe@me.com
+        password: <password('secret')>
+        roles: ["ROLE_ADMIN"]
+        notifications: true
+        rgpd: true
+        created_at: <dateTimeBetween('-2 years', '-100 days')>
+
+App\Entity\Technologie:
+    techno_{1..10}:
+        name (unique): <words(1, true)>
+        description: <sentence()>
+        picture: <picsum('public/uploads/technologies', 120, 120)>
+
+App\Entity\Training:
+    training_{1..12}:
+        user: '@admin'
+        name (unique): <sentence(5, true)>
+        description: <sentence()>
+        picture: <picsum('public/uploads/trainings', 1280, 800)>
+        infos: '10%? <sentence()>'
+        created_at: <dateTimeBetween('-100 days', '-100 days')>
+        updated_at: "20%? <dateTimeBetween($created_at, 'now')>"
+
+App\Entity\Course:
+    course_{1..50}:
+        user: '@admin'
+        title (unique): <sentence(3, true)>
+        picture: <picsum('public/uploads/courses', 1280, 800)>
+        content: <markdown()>
+        draft: <boolean(10)>
+        premium: <boolean(20)>
+        technology: '<numberBetween(1, 2)>x @techno_*'
+        created_at: <dateTimeBetween('@admin->created_at', '-100 days')>
+        updated_at: "25%? <dateTimeBetween($created_at, 'now')>"
+
+App\Entity\Chapter:
+    chapter_{1..40}:
+        training: '@training_<numberBetween(1, 12)>'
+        course : '@course_<current()>'
+        position: <current()>

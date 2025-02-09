@@ -1,0 +1,63 @@
+{% extends 'layouts/admin/default.html.twig' %}
+
+{% block title %}Messenger - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="h-44 bg-gray-100 pt-16">
+        <div class="pl-20 w-4/5">
+            <h1 class="text-5xl text-gray-700">Tâches échouées du messenger</h1>
+        </div>
+    </div>
+
+    {# Liste des tâches échouées #}
+    <section class="pl-20 w-4/5 pt-12">
+
+        {# Alerte en cas de succès #}
+        {% include 'components/_alert.html.twig' with { 'flashes': app.flashes('success'), 'type': 'success' } only %}
+
+        {% if jobs|length > 0 %}
+            <table class="w-full">
+                <tbody>
+                    {% for job in jobs %}
+                        <tr class="border-b border-gray-200 h-24 hover:bg-gray-50">
+                            <td class="pl-4">{{ job.id }}</td>
+                            <td class="font-bold">{{ job.messageClass }}</td>
+                            <td>Message : <span class="text-gray-500">{{ job.errorMessage }}</span>
+                            </td>
+                            <td>Échoué le : <span class="text-gray-400">{{ job.failedAt|format_datetime(pattern='d MMMM Y, H:mm:s') }}</span></td>
+                            <td class="pr-4">
+                                <div class="float-right flex space-x-4">
+                                    <a href="{{ path('admin_messenger_retry', { 'id': job.id }) }}" class="text-gray-500 hover:text-gray-300" title="Relancer la tâche">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                        </svg>
+                                    </a>
+                                    <a data-controller="modal" data-action="modal#show_text" class="text-gray-500 cursor-pointer hover:text-gray-300" data-text="{{ job.trace|nl2br|raw }}" title="Voir la trace">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                                        </svg>
+                                    </a>
+                                    <a href="{{ path('admin_messenger_delete', { 'id': job.id }) }}" class="text-red-500 hover:text-red-300" title="Supprimer la tâche">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% include 'components/modal/_view_text.html.twig' %}
+
+            <div class="float-left my-12">
+                {{ knp_pagination_render(jobs) }}
+            </div>
+        {% else %}
+            <div class="mt-28">
+                <p class="text-4xl font-black mb-6">Nickel chrome ici 👌</p>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

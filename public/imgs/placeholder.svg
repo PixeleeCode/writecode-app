@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="350" height="219" viewBox="0 0 350 219">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.031" y1="0.042" x2="0.976" y2="0.96" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="1" stop-color="#e2e8f0"/>
+    </linearGradient>
+    <clipPath id="clip-Placeholder_picture">
+      <rect width="350" height="219"/>
+    </clipPath>
+  </defs>
+  <g id="Placeholder_picture" data-name="Placeholder picture" clip-path="url(#clip-Placeholder_picture)">
+    <rect width="350" height="219" fill="url(#linear-gradient)"/>
+  </g>
+</svg>

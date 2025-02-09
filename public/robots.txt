@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /maintenance
+Disallow: /recherche
+Disallow: /compte
+Disallow: /mot-de-passe/perdu
+Sitemap: https://writecode.fr/sitemap.xml

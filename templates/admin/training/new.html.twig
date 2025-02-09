@@ -1,0 +1,93 @@
+{% extends 'layouts/admin/default.html.twig' %}
+
+{# Thème formulaire pour la collection (chapitres) #}
+{% form_theme form 'admin/training/_training_chapters_entry_row.html.twig' %}
+
+{% block title %}Nouvelle formation - {{ parent() }}{% endblock %}
+
+{% block body %}
+    {{ form_start(form, { 'attr': { 'id': 'form-admin' }}) }}
+        <div class="h-44 bg-gray-100 my-auto pt-16">
+            <div class="pl-20 w-4/5">
+                <div class="flex justify-between">
+                    <div class="flex items-center">
+                        <a href="{{ path('admin_training_list') }}" class="text-red-500 hover:text-red-300 transition ease-in-out mt-1 mr-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-7 w-7">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                        </a>
+                        <h1 class="text-5xl text-gray-700">Nouvelle formation</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <a href="{{ path('admin_training_list') }}" class="btn btn-outline my-auto py-3">Annuler</a>
+                        <button class="btn btn-green my-auto py-3">Enregistrer la technologie</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Formulaire de création d'une nouvelle formation #}
+        <section class="pt-12 pl-20 w-4/5">
+            <div class="flex items-start space-x-6">
+                <div class="w-8/12">
+                    <div class="mb-6">
+                        {{ form_label(form.name) }}
+                        {{ form_widget(form.name) }}
+                        <span class="errors">{{ form_errors(form.name) }}</span>
+                    </div>
+                    <div class="mb-6">
+                        {{ form_label(form.description) }}
+                        {{ form_widget(form.description, { 'attr': { 'rows': 10, 'maxlength': 255 }}) }}
+                        <span class="errors">{{ form_errors(form.description) }}</span>
+                    </div>
+                    <div class="mb-6">
+                        {{ form_label(form.infos) }}
+                        {{ form_widget(form.infos) }}
+                        <span class="errors">{{ form_errors(form.infos) }}</span>
+                        <span class="block text-sm text-gray-400 mt-1">
+                            Écrire en markdown. Besoin d’aide ?
+                            <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" class="block text-blue-500 group-hover:text-blue-300">
+                                https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
+                            </a>
+                        </span>
+                    </div>
+                </div>
+                <div class="w-4/12">
+                    <h2 class="text-2xl font-bold mb-4">Informations</h2>
+                    <div class="mb-6">
+                        {{ form_label(form.picture) }}
+                        <img src="" id="preview" alt="Preview" class="hidden rounded w-full mt-6" height="350" width="220">
+                        <label class="w-full pt-4 cursor-pointer">
+                            <span class="mt-2 leading-normal text-green-500 hover:text-green-300">Ajouter une image</span>
+                            {{ form_widget(form.picture, { 'attr': { 'class': 'hidden' }}) }}
+                        </label>
+                        <span class="errors">{{ form_errors(form.picture) }}</span>
+                        <span class="text-sm text-gray-400">Taille : 1280x800px. Poids: 1Mo max.</span>
+                    </div>
+                    <h2 class="text-2xl font-bold mb-4 pt-6">Notifications</h2>
+                    <div class="w-3/4 mb-6 flex items-center space-x-6">
+                        {{ form_label(form.notifications) }}
+                        <label for="training_notifications" class="flex items-center cursor-pointer mt-1">
+                            <div class="relative">
+                                {{ form_widget(form.notifications, { 'attr': { 'class': 'hidden' }}) }}
+                                <!-- inner line -->
+                                <div class="toggle_line w-10 h-4 bg-gray-200 rounded-full shadow-inner"></div>
+                                <!-- dot -->
+                                <div class="toggle_dot absolute w-6 h-6 bg-white rounded-full shadow inset-y-0 left-0"></div>
+                            </div>
+                        </label>
+                        <span class="errors">{{ form_errors(form.notifications) }}</span>
+                    </div>
+                    <div class="mb-6" data-controller="prototype" data-prototype="{{ form_row(form.chapters.vars.prototype)|e('html_attr') }}">
+                        <label>Chapitres de la formation</label>
+                        <p class="text-gray-400 text-sm mb-6">L'ordre ci-dessous correspond à l'ordre des chapitres</p>
+                        {{ form_row(form.chapters) }}
+                        <button type="button" data-action="prototype#addChapter" class="btn btn-blue py-3" data-index="0">
+                            Ajouter un chapitre
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    {{ form_end(form) }}
+{% endblock %}

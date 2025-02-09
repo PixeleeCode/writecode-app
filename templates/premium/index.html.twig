@@ -1,0 +1,92 @@
+{% extends 'layouts/default/default.html.twig' %}
+
+{% block title %}Abonnement Premium - {{ parent() }}{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://js.stripe.com/v3/" defer></script>
+{% endblock %}
+
+{% block body %}
+    <div class="px-4 md:w-2/3 md:mx-auto">
+        <h1 class="text-3xl font-bold pt-8 pb-12 sm:text-5xl dark:text-white">
+            Abonnement Premium
+        </h1>
+
+        <p class="font-bold text-lg dark:text-white">L'abonnement permet de soutenir la création de nouveaux tutoriels sur WriteCode. 😊</p>
+        <p class="mb-12 text-lg dark:text-gray-300">Je suis seul à écrire les différents tutoriels et par conséquent, cela me prend un certains temps à vouloir vous apporter du contenu de qualité.</p>
+
+        <h4 class="text-xl font-bold dark:text-white">D'accord et en retour ?</h4>
+        <p class="text-lg dark:text-gray-300">En retour, vous avez accès à des articles et des tutoriels bien plus poussés techniquement. Il est prévu dans le temps que d'autres services viennent se greffer aux articles privés.</p>
+        <p class="mb-14 text-lg dark:text-gray-300 lg:mb-28">En tant que Premium, vous profiterez de ces nouveaux services sans surplus bien évidemment 😉</p>
+
+        {% if prices|length > 0 %}
+
+            {% if app.request.get('success') == 1 %}
+                <div class="alert alert-success mb-24 p-8 justify-center" role="alert">
+                    <span class="text-3xl font-bold">
+                        🥳 Merci ! Je ne te retiens pas et va consulter les tutoriels Premium
+                    </span>
+                </div>
+            {% endif %}
+
+            <div class="alert alert-error mb-6 hidden" role="alert">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="text-red-400 w-6 h-6 mr-4">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                </svg>
+                <span id="errors-stripe"></span>
+            </div>
+
+            <div class="flex flex-col-reverse pb-24 space-y-8 lg:flex-row lg:space-y-0 lg:items-center lg:justify-center lg:space-x-8">
+                {% for price in prices %}
+                    {% set promote = price.promote ? true : false %}
+                    <div class="{{ promote ? 'bg-gray-50 dark:bg-gray-600' : '' }} border border-gray-200 rounded-lg p-6 mt-8 text-center hover:bg-gray-100 lg:w-6/12 lg:mt-0 dark:border-gray-600 dark:hover:bg-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-yellow-500 mb-2 dark:text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        <h4 class="text-xl font-medium mb-4 dark:text-gray-300">
+                            {{ price.recurring is same as('month') ? 'Mensuel' : 'Annuel' }}
+                        </h4>
+                        <h2 class="text-5xl font-medium dark:text-white">
+                            {{ price.amount|format_currency('EUR') }}
+                            <span class="text-gray-400 text-base dark:text-gray-400">/{{ price.recurring is same as('month') ? 'mois' : 'an' }}</span>
+                        </h2>
+                        <p class="text-gray-500 my-6 dark:text-gray-300">
+                            Accès à tous les tutoriels sur WriteCode pendant 1 {{ price.recurring is same as('month') ? 'mois' : 'an' }}
+                        </p>
+
+                        {% if price.promote %}
+                            <p class="mt-6 text-red-500 font-medium dark:text-red-400">
+                                {{ price.promotionalText }}
+                            </p>
+                        {% endif %}
+
+                        {# Lien de souscription #}
+                        <button
+                            type="button"
+                            data-controller="stripe"
+                            data-action="stripe#loadStripe"
+                            class="btn btn-blue py-3 w-full {{ promote ? 'mt-6' : 'mt-12' }}"
+                            data-id="{{ price.id }}"
+                        >
+                            Devenir Premium
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="mt-28">
+                <p class="text-6xl font-black mb-6">Patience 😊</p>
+                <p class="text-2xl text-gray-500">Les abonnements sont actuellement indisponibles...</p>
+                <p class="text-2xl text-gray-500">
+                    <a href="{{ path('course_index') }}"
+                       title="Accueil" aria-label="Accueil"
+                       class="text-blue-500 hover:text-blue-300 transition ease-in"
+                    >
+                        Retournes à la page d'accueil
+                    </a>
+                </p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

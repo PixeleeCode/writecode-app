@@ -1,0 +1,18 @@
+{% extends 'layouts/default/default.html.twig' %}
+
+{% block body %}
+    <main class="container mx-auto px-4 mt-12 xl:mt-20">
+        <div class="my-28">
+            <p class="text-4xl font-bold mb-6 sm:text-5xl dark:text-white">{% block title '' %}</p>
+            <p class="text-lg text-gray-500 sm:text-xl dark:text-gray-400">{% block description '' %}</p>
+            <p class="text-lg text-gray-500 sm:text-xl dark:text-gray-400">
+                <a href="{{ path('course_index') }}"
+                   title="Accueil" aria-label="Accueil"
+                   class="text-blue-500 hover:text-blue-300 transition ease-in"
+                >
+                    Retournes à la page d'accueil
+                </a>
+            </p>
+        </div>
+    </main>
+{% endblock %}

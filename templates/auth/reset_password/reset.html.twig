@@ -1,0 +1,24 @@
+{% extends 'layouts/auth/default.html.twig' %}
+
+{% block title %}Nouveau mot de passe - {{ parent() }}{% endblock %}
+
+{% block body %}
+    {{ form_start(resetForm, { attr: { class: 'px-9 my-12 md:mx-auto md:w-2/3 xl:w-3/6 xl:my-24' }}) }}
+        <h1 class="text-4xl text-center font-bold mb-12 lg:text-5xl dark:text-white">
+            Réinitialiser le mot de passe
+        </h1>
+
+        <div class="mb-6 dark:text-gray-300">
+            {{ form_label(resetForm.password.first) }}
+            {{ form_widget(resetForm.password.first) }}
+            <span class="errors">{{ form_errors(resetForm.password.first) }}</span>
+        </div>
+        <div class="mb-6 dark:text-gray-300">
+            {{ form_label(resetForm.password.second) }}
+            {{ form_widget(resetForm.password.second) }}
+            <span class="errors">{{ form_errors(resetForm.password.second) }}</span>
+        </div>
+
+        <button class="btn btn-gradient-red py-3 w-full mt-4">Enregistrer le nouveau mot de passe</button>
+    {{ form_end(resetForm) }}
+{% endblock %}

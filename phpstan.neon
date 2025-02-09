@@ -1,0 +1,13 @@
+includes:
+    - vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor/phpstan/phpstan-symfony/rules.neon
+    - vendor/phpstan/phpstan-doctrine/extension.neon
+
+parameters:
+    level: 5
+    paths:
+        - src
+    excludes_analyse:
+        - src/migrations/*
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false

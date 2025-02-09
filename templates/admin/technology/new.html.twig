@@ -1,0 +1,57 @@
+{% extends 'layouts/admin/default.html.twig' %}
+
+{% block title %}Nouvelle technologie - {{ parent() }}{% endblock %}
+
+{% block body %}
+    {{ form_start(form, { 'attr': { 'id': 'form-admin' }}) }}
+        <div class="h-44 bg-gray-100 my-auto pt-16">
+            <div class="pl-20 w-4/5">
+                <div class="flex justify-between">
+                    <div class="flex items-center">
+                        <a href="{{ path('admin_technology_list') }}" class="text-red-500 hover:text-red-300 transition ease-in-out mt-1 mr-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-7 w-7">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                        </a>
+                        <h1 class="text-5xl text-gray-700">Nouvelle technologie</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <a href="{{ path('admin_technology_list') }}" class="btn btn-outline my-auto py-3">Annuler</a>
+                        <button class="btn btn-green my-auto py-3">Enregistrer la technologie</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Formulaire de création d'une nouvelle technologie #}
+        <section class="pt-12 pl-20 w-4/5">
+            <div class="flex items-start space-x-6">
+                <div class="w-9/12">
+                    <div class="mb-6">
+                        {{ form_label(form.name) }}
+                        {{ form_widget(form.name) }}
+                        <span class="errors">{{ form_errors(form.name) }}</span>
+                    </div>
+                    <div class="mb-6">
+                        {{ form_label(form.description) }}
+                        {{ form_widget(form.description, { 'attr': { 'rows': 10, 'maxlength': 255 }}) }}
+                        <span class="errors">{{ form_errors(form.description) }}</span>
+                    </div>
+                </div>
+                <div class="w-3/12">
+                    <h2 class="text-2xl font-bold mb-4">Informations</h2>
+                    <div class="mb-6">
+                        {{ form_label(form.picture) }}
+                        <img src="" id="preview" alt="Preview" class="hidden rounded w-full mt-6" height="256" width="256">
+                        <label class="w-full pt-4 cursor-pointer">
+                            <span class="mt-2 leading-normal text-green-500 hover:text-green-300">Ajouter une image</span>
+                            {{ form_widget(form.picture, { 'attr': { 'class': 'hidden' }}) }}
+                        </label>
+                        <span class="errors">{{ form_errors(form.picture) }}</span>
+                        <span class="text-sm text-gray-400">Taille : 256x256px. Poids: 1Mo max.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    {{ form_end(form) }}
+{% endblock %}

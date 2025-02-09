@@ -1,0 +1,52 @@
+{# Bannière RGPD #}
+{% include 'components/_banner.html.twig' %}
+
+{# Footer #}
+<footer class="container absolute mx-auto inset-x-0 bottom-4 px-4">
+    <div class="text-gray-500 text-sm md:text-md md:flex items-center justify-between h-16 border-t border-gray-300 dark:border-gray-500">
+        <div class="flex items-center justify-between mt-4 md:mt-0 md:flex-1 dark:text-gray-300">
+            <div>
+                © {{ 'now'|date('Y') }} WriteCode - <a
+                    href="https://writecode.freshstatus.io"
+                    title="Statuts du site Web"
+                    aria-label="Statuts du site Web"
+                    class="hover:text-gray-800 transition ease-in dark:text-gray-300 dark:hover:text-white"
+                >
+                    Statuts
+                </a>
+            </div>
+
+            <div data-controller="dark">
+                <ul class="theme-switcher flex items-center space-x-4">
+                    <li class="theme-switcher-light theme-switcher-button">
+                        <!-- svg xmlns="http://www.w3.org/2000/svg" class="theme-switcher-light theme-switcher-button h-6 w-6 cursor-pointer text-gray-400 hover:text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg -->
+                        <img src="{{ asset('imgs/icons/princess-leia.svg') }}" alt="Mode Leïa - Light" class="theme-switcher-light theme-switcher-button h-6 w-6 cursor-pointer">
+                    </li>
+                    <li class="theme-switcher-dark theme-switcher-button">
+                        <!-- svg xmlns="http://www.w3.org/2000/svg" class="theme-switcher-dark theme-switcher-button h-6 w-6 cursor-pointer text-gray-400 hover:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg -->
+                        <img src="{{ asset('imgs/icons/dark-vador.svg') }}" alt="Mode Vador - Dark" class="theme-switcher-dark theme-switcher-button h-6 w-6 cursor-pointer">
+                    </li>
+                </ul>
+            </div>
+        </div>
+        {% if pages()|length > 0 %}
+            <ul class="my-6 md:my-0 md:flex">
+                {% for page in pages() %}
+                    <li>
+                        <a href="{{ path('pages', { slug: page.slug }) }}"
+                           title="{{ page.title }}"
+                           aria-label="{{ page.title }}"
+                           class="md:ml-8 hover:text-gray-800 transition ease-in dark:text-gray-300 dark:hover:text-white"
+                        >
+                            {{ page.title }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</footer>

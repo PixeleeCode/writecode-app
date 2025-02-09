@@ -1,0 +1,70 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: 'fr'
+    app.env: '%env(APP_ENV)%'
+    app.email: '%env(APP_EMAIL)%'
+    app.email_failure: '%env(APP_EMAIL_FAILURE)%'
+    app.url: '%env(APP_URL)%'
+    app.public_dir: '%kernel.project_dir%/public'
+    app.image_cache_dir: '%kernel.project_dir%/var/storage/cache'
+    app.upload.course: '%app.public_dir%/%env(UPLOAD_COURSE)%'
+    app.upload.technology: '%app.public_dir%/%env(UPLOAD_TECHNOLOGY)%'
+    app.upload.training: '%app.public_dir%/%env(UPLOAD_TRAINING)%'
+    sendinblue_api: '%env(SENDINBLUE_API)%'
+    stripe_public_key: '%env(STRIPE_PUBLISHABLE_KEY)%'
+    stripe_private_key: '%env(STRIPE_SECRET_KEY)%'
+    stripe_product_id: '%env(STRIPE_PRODUCT_ID)%'
+    container.dumper.inline_factories: true
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: false
+        bind:
+            $secret: '%kernel.secret%'
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/Tests/'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller/'
+        tags: ['controller.service_arguments']
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+    League\Glide\Server:
+        factory: ['League\Glide\ServerFactory', create]
+        arguments:
+            - source: '%app.public_dir%'
+              cache: '%app.image_cache_dir%'
+
+    Redis:
+        class: Predis\Client
+        arguments:
+            - '%env(REDIS_HOST)%'
+
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
+        arguments:
+            - '@Redis'
+
+    App\Service\Message\FailedJobsService:
+        arguments: ['@messenger.transport.failed']
+
+    App\Controller\SearchController:
+        arguments:
+            $courseFinder: '@typesense.finder.courses'

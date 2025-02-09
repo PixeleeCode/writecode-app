@@ -1,0 +1,79 @@
+{% extends 'layouts/default/default.html.twig' %}
+
+{% block title %}{{ training ? 'Formation : '~ training.name : 'Formation non trouvée' }} - {{ parent() }}{% endblock %}
+
+{% block metas %}
+    <meta name="description" content="Formation : {{ training.name }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ absolute_url(path('trainings_show', { slug: training.slug })) }}">
+    <meta property="og:title" content="WriteCode">
+    <meta property="og:description" content="Formation : {{ training.name }}">
+    <meta property="og:image" content="{{ absolute_url(asset('uploads/trainings/'~ training.picture)) }}">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ absolute_url(path('trainings_show', { slug: training.slug })) }}">
+    <meta property="twitter:title" content="WriteCode">
+    <meta property="twitter:description" content="Formation : {{ training.name }}">
+    <meta property="twitter:image" content="{{ absolute_url(asset('uploads/trainings/'~ training.picture)) }}">
+{% endblock %}
+
+{% block body %}
+    {% if training|length == 1 and training.chapters|length > 1 %}
+        <header class="container mx-auto mt-6 mb-12 pb-6 border-b border-gray-300 px-4 xl:mt-20 dark:text-white dark:border-gray-500">
+            <div class="flex items-center mb-4">
+                <img src="{{ asset_image(asset('uploads/trainings/'~ training.picture), { 'w': 85, 'h': 85, 'fit': 'crop' }) }}"
+                     alt="{{ training.name }}"
+                     class="rounded-full shadow mr-6 hidden xl:inline"
+                     height="85" width="85"
+                >
+                <div class="space-y-3">
+                    <h1 class="text-3xl font-bold xl:text-4xl">
+                        {{ training.name }}
+                    </h1>
+                    <p class="text-lg sm:w-2/3 xl:text-xl dark:text-gray-400">
+                        {{ training.description }}
+                    </p>
+                </div>
+            </div>
+        </header>
+
+        {# Message informatif en lien avec la formation #}
+        {% if training.infos is not null %}
+            <div class="alert alert-infos mb-12 mx-4 w-auto text-lg" role="alert">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 mr-4 text-blue-500">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {{ training.infos|markdown }}
+            </div>
+        {% endif %}
+
+        {# Menu administration #}
+        {% if is_granted('ROLE_MODERATOR') %}
+            <div class="mb-12 mx-4">
+                <a href="{{ path('admin_training_edit', { id: training.id }) }}"
+                   title="Éditer cette formation" aria-label="Éditer cette formation"
+                   class="btn btn-blue py-3"
+                >
+                    Éditer cette formation
+                </a>
+            </div>
+        {% endif %}
+
+        {% include 'components/_cards.html.twig' with { 'courses': courses, 'chapter': true } only %}
+    {% else %}
+        <div class="mt-28 mx-4">
+            <p class="text-5xl font-bold mb-6 xl:text-6xl dark:text-white">Presque ! Voilà, voilà... 😶</p>
+            <p class="text-xl text-gray-500">
+                <a href="{{ path('course_index') }}"
+                   title="Accueil" aria-label="Accueil"
+                   class="text-blue-500 hover:text-blue-300 transition ease-in"
+                >
+                    Retournes à la page d'accueil
+                </a>
+            </p>
+        </div>
+    {% endif %}
+{% endblock %}

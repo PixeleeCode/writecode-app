@@ -1,0 +1,59 @@
+<div class="px-4 my-6 sm:flex sm:items-center sm:justify-between">
+    <ul class="text-lg flex space-x-8">
+        <li>
+            <a href="{{ path('course_index') }}"
+               title="Tutoriels" aria-label="Tutoriels"
+               class="text-red-500 transition ease-in hover:text-red-300"
+            >
+                Tutoriels
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('trainings_index') }}"
+               title="Formations" aria-label="Formations"
+               class="text-gray-500 transition ease-in dark:text-gray-400 dark:hover:text-white"
+            >
+                Formations
+            </a>
+        </li>
+    </ul>
+    <div class="flex items-center pt-6 sm:pt-0">
+        <div class="hidden mr-6 items-center pb-2 xl:flex dark:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5 mr-3 text-red-500">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+            Filtrer par
+        </div>
+        {# Dropdown : Filtre par technologie #}
+        <div class="relative inline-block text-left group">
+            <div class="pb-2">
+                <button type="button" class="inline-flex justify-center items-center w-full rounded-md border border-gray-300 px-6 py-2 bg-white font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700 dark:bg-gray-500 dark:text-gray-200 dark:border-gray-500 dark:hover:bg-gray-600 dark:hover:text-white" id="options-menu" aria-haspopup="true" aria-expanded="true">
+                    {{ app.request.get('technology') ? app.request.get('technology')|capitalize : 'Technologies' }}
+                    <svg class="-mr-1 ml-2 h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+            <div class="hidden z-10 origin-top-right absolute w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 group-hover:block sm:right-0 dark:bg-gray-600">
+                <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                    <a href="{{ path('course_index') }}"
+                       title="Tous les cours" aria-label="Tous les cours"
+                       class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
+                       role="menuitem"
+                    >
+                        Tous les cours
+                    </a>
+                    {% for technology in technologies %}
+                        <a href="{{ path('course_index', { technology: technology.slug }) }}"
+                           title="{{ technology.name }}" aria-label="{{ technology.name }}"
+                           class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white {{ app.request.get('technology') is same as(technology.slug) ? 'text-red-500': '' }}"
+                           role="menuitem"
+                        >
+                            {{ technology.name }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

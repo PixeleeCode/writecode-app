@@ -1,0 +1,134 @@
+.btn {
+    @apply font-medium py-2 px-6 rounded-md cursor-pointer;
+}
+
+.btn-gradient-red {
+    background: #FC3E69;
+    background: -moz-linear-gradient(90deg, #ff7e32 0%, #ff2557 100%);
+    background: -webkit-linear-gradient(90deg, #ff7e32 0%, #ff2557 100%);
+    background: linear-gradient(90deg, #ff7e32 0%, #ff2557 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff7e32",endColorstr="#ff2557",GradientType=1);
+    @apply leading-6 text-white transition ease-in-out;
+
+    &:hover {
+        background: #ff1b4e;
+        background: -moz-linear-gradient(90deg, #ff6d14 0%, #ff1b4e 100%);
+        background: -webkit-linear-gradient(90deg, #ff6d14 0%, #ff1b4e 100%);
+        background: linear-gradient(90deg, #ff6d14 0%, #ff1b4e 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff6d14",endColorstr="#ff1b4e",GradientType=1);
+    }
+}
+
+.btn-green {
+    @apply bg-green-500 text-white transition ease-in-out;
+
+    &:hover {
+        @apply bg-green-300;
+    }
+}
+
+.btn-blue {
+    @apply bg-blue-500 text-white transition ease-in-out;
+
+    &:hover {
+        @apply bg-blue-300;
+    }
+}
+
+.btn-red {
+    @apply bg-red-500 text-white transition ease-in-out;
+
+    &:hover {
+        @apply bg-red-300;
+    }
+}
+
+.btn-outline {
+    @apply bg-gray-100 text-gray-500 transition ease-in-out;
+
+    &:hover {
+        @apply bg-gray-200 text-gray-800;
+    }
+}
+
+// Formulaire
+form {
+    label {
+        @apply block font-medium mb-1;
+    }
+
+    input, select, textarea {
+        @apply outline-none w-full bg-gray-100 text-gray-700 text-lg rounded py-3 px-4 dark:bg-gray-700 dark:text-gray-300;
+
+        &:focus {
+            @apply bg-white text-gray-900 ring-2 ring-gray-200 dark:bg-gray-600 dark:ring-gray-900 dark:text-gray-100;
+        }
+    }
+
+    input[type="checkbox"] {
+        @apply h-4 w-4;
+    }
+
+    .errors {
+        ul {
+            li {
+                @apply text-sm text-red-500 font-medium mt-2;
+            }
+        }
+    }
+}
+
+// Formulaire admin
+form#form-admin,
+form.is_toggle {
+    label {
+        @apply block text-gray-500 mb-1;
+    }
+
+    input, select, textarea {
+        @apply outline-none w-full bg-white text-gray-900 ring-1 ring-gray-200 text-lg rounded py-3 px-4;
+    }
+
+    .toggle_dot {
+        top: -.25rem;
+        left: -.25rem;
+        transition: all 0.3s ease-in-out;
+    }
+
+    input:checked ~ .toggle_dot {
+        @apply bg-green-500;
+        transform: translateX(100%);
+    }
+
+    .sortable-ghost {
+        @apply outline-none w-full bg-gray-50 border-2 border-dashed border-gray-200 rounded py-3 px-4;
+    }
+}
+
+// Formulaire de recherche
+form#search {
+    input {
+        background: transparent;
+        @apply outline-none appearance-none border-b border-gray-300 font-medium text-gray-200;
+
+        &:focus {
+            @apply text-white border-gray-100;
+        }
+    }
+}
+
+.alert {
+    @apply rounded-lg w-full py-4 px-6 flex items-center font-medium;
+}
+
+.alert-error {
+    @apply bg-red-50 text-red-600;
+}
+
+.alert-success {
+    @apply bg-green-50 text-green-600;
+}
+
+.alert-infos {
+    @apply bg-blue-50 text-blue-600 ;
+}

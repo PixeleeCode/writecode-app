@@ -1,0 +1,77 @@
+{% extends 'layouts/auth/default.html.twig' %}
+
+{% block title %}Se connecter - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <form method="post" class="px-9 md:mx-auto md:w-2/3 xl:w-3/6">
+        <h1 class="text-3xl text-center font-bold m-12 lg:text-5xl dark:text-white">
+            Se connecter à WriteCode
+        </h1>
+
+        {% if error %}
+            <div class="alert alert-error mb-6">
+                {{ error.messageKey|trans(error.messageData, 'security')|raw }}
+            </div>
+        {% endif %}
+
+        {% include 'components/_alert.html.twig' with { 'flashes': app.flashes('success'), 'type': 'success' } only %}
+
+        <div class="mb-6 dark:text-gray-300">
+            <label for="inputEmail">Adresse email</label>
+            <input type="email" value="{{ last_username }}" name="email" id="inputEmail" required autofocus>
+        </div>
+        <div class="mb-6 dark:text-gray-300">
+            <div class="flex justify-between">
+                <label for="inputPassword">Mot de passe</label>
+                <a href="{{ path('app_forgot_password_request') }}"
+                   title="Mot de passe oublié ?" aria-label="Mot de passe oublié ?"
+                   class="text-sm text-red-500 hover:text-red-400 transition ease-in"
+                >
+                    Mot de passe oublié ?
+                </a>
+            </div>
+            <input type="password" name="password" id="inputPassword" required>
+        </div>
+        <div class="mb-6 dark:text-gray-300">
+            <label>
+                <input type="checkbox" name="_remember_me" class="mr-3"> Se souvenir de moi
+            </label>
+        </div>
+
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+        <button class="btn btn-gradient-red w-full py-3 mt-4">Connexion</button>
+    </form>
+
+    <section class="px-9 my-12 md:mx-auto md:w-2/3 xl:w-3/6 xl:my-24">
+        <h2 class="text-2xl text-center font-bold mb-5 dark:text-white">
+            Utiliser un réseau social pour se connecter
+        </h2>
+
+        <ul class="space-y-4 md:flex md:space-x-4 md:space-y-0">
+            <li class="sm:w-1/3">
+                <a href="{{ path('social_connect', { 'service': 'github' }) }}"
+                   title="GitHub" aria-label="GitHub"
+                   class="block text-center text-white font-medium my-auto py-4 rounded bg-gray-800 dark:bg-gray-900"
+                >
+                    GitHub
+                </a>
+            </li>
+            <li class="sm:w-1/3">
+                <a href="{{ path('social_connect', { 'service': 'gitlab' }) }}"
+                   title="GitLab" aria-label="GitLab"
+                   class="block text-center text-yellow-800 font-medium my-auto py-4 rounded bg-yellow-300"
+                >
+                    GitLab
+                </a>
+            </li>
+            <li class="sm:w-1/3">
+                <a href="{{ path('social_connect', { 'service': 'discord' }) }}"
+                   title="Discord" aria-label="Discord"
+                   class="block text-center text-white font-medium my-auto py-4 rounded bg-violet-700"
+                >
+                    Discord
+                </a>
+            </li>
+        </ul>
+    </section>
+{% endblock %}

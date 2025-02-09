@@ -1,0 +1,152 @@
+<header class="bg-center bg-cover text-white" style="background-image: url({{ asset('imgs/header/cover.webp') }})">
+    <nav class="bg-gradient-to-b from-gray-800">
+        <div class="container mx-auto py-3">
+            <div class="relative flex justify-between items-center p-4">
+                <a href="{{ path('course_index') }}" class="tracking-wide font-light text-white text-3xl transition ease-in"
+                   title="WriteCode - Plateforme de cours sur le développements Web"
+                   aria-label="WriteCode - Plateforme de cours sur le développements Web"
+                >
+                    write<span class="text-red-500 font-normal">code</span>
+                </a>
+
+                <ul class="flex flex-row items-center space-x-6 xl:hidden">
+                    <li data-controller="search" data-action="click->search#toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-7 h-7 cursor-pointer text-gray-300 hover:text-gray-100 transition ease-in">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </li>
+
+                    {% if app.user %}
+                        <li>
+                            <a href="{{ path('account_index') }}" title="Mon compte" aria-label="Mon compte">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-300 transition ease-in" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_logout') }}" title="Se déconnecter" aria-label="Se déconnecter">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500 transition ease-in" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                </svg>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{{ path('app_login') }}" title="Se connecter" aria-label="Se connecter">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500 transition ease-in" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                                </svg>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+
+                <ul class="hidden xl:block xl:flex xl:items-center xl:space-x-8">
+                    <li data-controller="search" data-action="click->search#toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-7 h-7 cursor-pointer text-gray-300 hover:text-gray-100 transition ease-in">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </li>
+
+                    {% if app.user is null %}
+                        <li>
+                            <a href="{{ path('app_login') }}"
+                               title="Se connecter" aria-label="Se connecter"
+                               class="text-gray-200 transition ease-in hover:text-white"
+                            >
+                                Se connecter
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_register') }}"
+                               title="Ouvrir un compte" aria-label="Ouvrir un compte"
+                               class="btn btn-gradient-red py-3 transition ease-in"
+                            >
+                                Ouvrir un compte
+                            </a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{{ path('account_index') }}"
+                               title="Mon compte" aria-label="Mon compte"
+                               class="text-gray-200 transition ease-in hover:text-white"
+                            >
+                                Hi {{ app.user.firstname }} ! 👋 Accéder à mon compte
+                            </a>
+                        </li>
+
+                        {# Compte Premium #}
+                        {% if app.user.subscription  %}
+                            <li>
+                                <span class="flex items-center justify-center rounded-full text-yellow-900 bg-yellow-500 text-sm font-bold px-4 py-1">
+                                    🤩 Premium
+                                </span>
+                            </li>
+                        {% endif %}
+
+                        {# Administration #}
+                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MODERATOR') %}
+                            <li>
+                                <a href="{{ path('admin_course_list') }}"
+                                   title="Administration" aria-label="Administration"
+                                   class="text-red-500 hover:text-red-300 transition ease-in"
+                                >
+                                    Administration
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {# Déconnexion utilisateur #}
+                        {% if is_granted('IS_IMPERSONATOR') %}
+                            <li>
+                                <a href="{{ impersonation_exit_path(path('admin_user_list')) }}"
+                                   class="text-yellow-500 transition ease-in hover:text-red-400"
+                                   title="Se déconnecter de l'utilisateur"
+                                   aria-label="Se déconnecter de l'utilisateur"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6 mt-1">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                    </svg>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="{{ path('app_logout') }}"
+                                   class="text-red-500 transition ease-in hover:text-red-400"
+                                   title="Se déconnecter"
+                                   aria-label="Se déconnecter"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6 mt-1">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                    </svg>
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="relative container mx-auto px-4 pb-16 xl:pb-24 xl:pt-14">
+        <p class="text-4xl font-bold text-shadow mb-2 xl:text-6xl">Apprendre le développement</p>
+        <p class="text-3xl font-bold text-shadow xl:text-4xl">facilement et simplement</p>
+        {% if app.user is null %}
+            <div class="mt-12">
+                <a href="{{ path('app_register') }}"
+                   title="Ouvrir un compte" aria-label="Ouvrir un compte"
+                   class="btn btn-gradient-red py-3"
+                >
+                    Rejoins-nous !
+                </a>
+                <a href="{{ path('app_login') }}"
+                   title="Se connecter" aria-label="Se connecter"
+                   class="btn btn-green py-3 ml-4 xl:hidden"
+                >
+                    Connexion
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</header>
+{% include 'components/_search.html.twig' %}

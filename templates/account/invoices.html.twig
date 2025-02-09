@@ -1,0 +1,90 @@
+{% extends 'layouts/default/default.html.twig' %}
+
+{% block title %}Mes factures - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <section class="px-4">
+        <h1 class="text-4xl font-bold py-12 dark:text-white">
+            {{ app.user.firstname }} {{ app.user.lastname }}
+        </h1>
+
+        {# Navigation #}
+        {% include 'account/_nav.html.twig' %}
+
+        <div class="my-16 lg:mx-auto lg:w-2/3 xl:w-1/2">
+            {% if portal is not null %}
+                <ul class="my-12 space-y-6 sm:space-y-0 sm:flex sm:items-center sm:justify-between dark:text-white">
+                    {% if app.user.subscription and app.user.subscription.isActive %}
+                        <li class="text-xl font-bold">
+                            <span class="font-normal text-base text-gray-500 dark:text-gray-300">Prochaine facture :</span>
+                            {{ app.user.subscription.nextPayment|format_datetime(pattern='d MMMM Y') }}
+                        </li>
+                    {% elseif app.user.subscription and app.user.subscription.dateEnd|date('Y-m-d') > 'now'|date('Y-m-d') %}
+                        <li class="text-xl font-bold">
+                            <span class="font-normal text-base text-gray-500 dark:text-gray-300">Fin de l'abonnement :</span>
+                            {{ app.user.subscription.dateEnd|format_datetime(pattern='d MMMM Y') }}
+                        </li>
+                    {% else %}
+                        <li class="text-xl font-bold">
+                            <span class="font-normal text-base text-gray-500 dark:text-gray-300">Aucun abonnement :</span>
+                            <a href="{{ path('premium_index') }}" class="text-yellow-500 hover:text-yellow-300">Devenir Premium</a>
+                        </li>
+                    {% endif %}
+                    <li class="order-first">
+                        <a href="{{ portal }}" class="btn btn-blue py-3">Gérer mon abonnement</a>
+                    </li>
+                </ul>
+            {% endif %}
+
+            <h2 class="text-3xl font-bold pb-4 border-b border-gray-200 dark:border-gray-600 dark:text-white">
+                Mes dernières factures
+            </h2>
+
+            {% if invoices|length > 0 %}
+                <table class="w-full">
+                    <tbody>
+                    {% for invoice in invoices %}
+                        <tr class="border-b border-gray-200 h-24 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700">
+                            <td class="p-4 w-/12">
+                                <span class="hidden sm:inline dark:text-gray-300">Date :</span> <span class="text-gray-600 sm:text-gray-400 dark:text-white">{{ invoice.created|format_datetime(pattern='d MMMM Y') }}</span>
+                            </td>
+                            <td>
+                                <span class="hidden sm:inline dark:text-gray-300">Montant :</span> <span class="text-gray-600 sm:text-gray-400 dark:text-white">{{ (invoice.total/100)|format_currency('EUR') }}</span>
+                            </td>
+                            <td class="hidden w-40 md:inline">
+                                {% if invoice.status is same as('open') %}
+                                    {% set status = 'En attente...' %}
+                                    {% set color = 'yellow' %}
+                                {% elseif invoice.status is same as('paid') %}
+                                    {% set status = 'Payé' %}
+                                    {% set color = 'green' %}
+                                {% elseif invoice.status is same as('void') %}
+                                    {% set status = 'Annulé' %}
+                                    {% set color = 'red' %}
+                                {% endif %}
+
+                                <span class="flex items-center justify-center rounded-full text-{{ color }}-500 bg-{{ color }}-100 text-sm font-medium px-4 py-1 dark:bg-{{ color }}-600 dark:text-white">
+                                    {{ status }}
+                                </span>
+                            </td>
+                            <td class="pr-4 text-right">
+                                <a href="{{ invoice.hosted_invoice_url }}"
+                                   title="Voir la facture" aria-label="Voir la facture"
+                                   class="text-blue-500 hover:text-blue-300"
+                                >
+                                    Voir la facture
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="my-16">
+                    <p class="text-3xl font-bold mb-2 dark:text-white">Pas de factures...</p>
+                    <p class="text-lg font-medium dark:text-gray-300">Pour ça, prends un <a href="{{ path('premium_index') }}" class="text-blue-500 hover:text-blue-300">abonnement</a> 😁</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'layouts/admin/default.html.twig' %}
+
+{% block title %}Pages - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="h-44 bg-gray-100 my-auto pt-16">
+        <div class="pl-20 w-4/5">
+            <div class="flex justify-between">
+                <h1 class="text-5xl text-gray-700">Pages</h1>
+                <a href="{{ path('admin_page_new') }}" class="btn btn-green my-auto py-3">Nouvelle page</a>
+            </div>
+        </div>
+    </div>
+
+    {# Liste des pages #}
+    <section class="pl-20 pt-12 w-4/5">
+
+        {# Alerte en cas de succès #}
+        {% include 'components/_alert.html.twig' with { 'flashes': app.flashes('success'), 'type': 'success' } only %}
+
+        {% if pages|length > 0 %}
+            <table class="w-full">
+                <tbody>
+                {% for page in pages %}
+                    <tr class="border-b border-gray-200 hover:bg-gray-50">
+                        <td class="p-6 text-left">
+                            <a href="{{ path('admin_page_edit', { id: page.id }) }}" class="text-blue-500 hover:text-blue-300">{{ page.title }}</a>
+                        </td>
+                        <td>URL :
+                            <span class="text-gray-400">
+                                <a href="{{ path('pages', { slug: page.slug }) }}">{{ page.slug }}</a>
+                            </span>
+                        </td>
+                        <td>Crée le : <span class="text-gray-400">{{ page.createdAt|date('d-m-Y') }}</span></td>
+                        <td class="pr-4 w-40">
+                            {% if page.isVisible %}
+                                <span class="flex items-center justify-center rounded-full text-green-500 bg-green-100 text-sm font-medium px-4 py-1">
+                                    Visible
+                                </span>
+                            {% else %}
+                                <span class="flex items-center justify-center rounded-full text-red-500 bg-red-50 text-sm font-medium px-4 py-1">
+                                    Non visible
+                                </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="mt-28">
+                <p class="text-4xl font-black mb-6">Aucune page pour le moment 🤷‍</p>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

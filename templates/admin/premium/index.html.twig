@@ -1,0 +1,64 @@
+{% extends 'layouts/admin/default.html.twig' %}
+
+{% block title %}Abonnements - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="h-44 bg-gray-100 my-auto pt-16">
+        <div class="pl-20 w-4/5">
+            <div class="flex justify-between">
+                <h1 class="text-5xl text-gray-700">Abonnements</h1>
+                <a href="{{ path('admin_premium_new') }}" class="btn btn-green my-auto py-3">Nouvel abonnement</a>
+            </div>
+        </div>
+    </div>
+
+    {# Liste des abonnements #}
+    <section class="pl-20 w-4/5 pt-12">
+
+        {# Alerte en cas de succès #}
+        {% include 'components/_alert.html.twig' with { 'flashes': app.flashes('success'), 'type': 'success' } only %}
+
+        {% if prices|length > 0 %}
+            <table class="w-full">
+                <tbody>
+                    {% for price in prices %}
+                        <tr class="border-b border-gray-200 h-24 hover:bg-gray-50">
+                            <td class="p-4 text-xl font-medium">
+                                <a href="{{ path('admin_premium_update', { id: price.id }) }}" class="text-blue-500 hover:text-blue-300">
+                                    {{ price.amount|format_currency('EUR') }}
+                                </a>
+                            </td>
+                            <td>Récurrence : <span class="text-gray-500">{{ price.recurring is same as('month') ? 'Mensuel' : 'Annuel' }}</span></td>
+                            <td>Crée le : <span class="text-gray-400">{{ price.createdAt|date('d-m-Y') }}</span></td>
+                            <td class="w-40 pr-8">
+                                {% if price.promote %}
+                                    <span class="flex items-center justify-center rounded-full text-yellow-500 bg-yellow-100 text-sm font-medium px-4 py-1">
+                                        Promotionnel
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="w-40">
+                                <form class="is_toggle flex items-center" data-controller="stripe" data-id="{{ price.id }}">
+                                    <span class="mr-2">Actif : </span>
+                                    <label for="price_is_visible_{{ price.id }}" class="cursor-pointer mt-1">
+                                        <div class="relative">
+                                            <input type="checkbox" id="price_is_visible_{{ price.id }}" data-action="change->stripe#archive" class="hidden" {{ price.isVisible is same as(true) ? 'checked="checked"' : '' }}>
+                                            <!-- inner line -->
+                                            <div class="toggle_line w-10 h-4 bg-gray-200 rounded-full shadow-inner"></div>
+                                            <!-- dot -->
+                                            <div class="toggle_dot absolute w-6 h-6 bg-white rounded-full shadow inset-y-0 left-0"></div>
+                                        </div>
+                                    </label>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="mt-28">
+                <p class="text-4xl font-black mb-6">Pas d'abonnements... encore 😎</p>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

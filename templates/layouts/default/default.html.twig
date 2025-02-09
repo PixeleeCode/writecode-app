@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="turbolinks-cache-control" content="no-cache" />
+        <link rel="alternate" type="application/rss+xml" title="Flux RSS - WriteCode" href="{{ url('rss') }}">
+        <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('favicon.png') }}">
+        <link rel="apple-touch-icon" sizes="128x128" href="{{ asset('favicons/icon-128x128.png') }}">
+
+        <title>{% block title %}WriteCode{% endblock %}</title>
+
+        {% block metas %}
+            <meta name="description" content="Tutoriels sur le développement web">
+
+            <!-- Open Graph / Facebook -->
+            <meta property="og:type" content="website">
+            <meta property="og:url" content="https://writecode.fr/">
+            <meta property="og:title" content="WriteCode">
+            <meta property="og:description" content="Tutoriels sur le développement web">
+            <meta property="og:image" content="{{ asset('favicons/icon-128x128.png') }}">
+
+            <!-- Twitter -->
+            <meta property="twitter:card" content="summary_large_image">
+            <meta property="twitter:url" content="https://writecode.fr/">
+            <meta property="twitter:title" content="WriteCode">
+            <meta property="twitter:description" content="Tutoriels sur le développement web">
+            <meta property="twitter:image" content="{{ asset('favicons/icon-128x128.png') }}">
+        {% endblock %}
+
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('scss') }}
+        {% endblock %}
+        {% block javascripts %}
+            {{ encore_entry_script_tags('js') }}
+        {% endblock %}
+    </head>
+    <body class="relative min-h-full dark:bg-gray-800">
+        {# Si la route est celle de l'accueil, charger le _header "complet", sinon le "minimal" #}
+        {% include app.request.pathinfo is same as('/') ? 'layouts/default/_header/full.html.twig' : 'layouts/default/_header/min.html.twig' only %}
+
+        <div class="container mx-auto pb-24">
+            {% block body %}{% endblock %}
+        </div>
+
+        {% include 'layouts/_footer.html.twig' %}
+    </body>
+</html>

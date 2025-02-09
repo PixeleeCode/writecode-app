@@ -1,0 +1,61 @@
+{% extends 'layouts/admin/default.html.twig' %}
+
+{% block title %}Nouvelle page - {{ parent() }}{% endblock %}
+
+{% block body %}
+    {{ form_start(form, { 'attr': { 'id': 'form-admin' }}) }}
+        <div class="h-44 bg-gray-100 my-auto pt-16">
+            <div class="pl-20 w-4/5">
+                <div class="flex justify-between">
+                    <div class="flex items-center">
+                        <a href="{{ path('admin_page_list') }}" class="text-red-500 hover:text-red-300 transition ease-in-out mt-1 mr-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-7 w-7">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                        </a>
+                        <h1 class="text-5xl text-gray-700">Nouvelle page</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <a href="{{ path('admin_page_list') }}" class="btn btn-outline my-auto py-3">Annuler</a>
+                        <button class="btn btn-green my-auto py-3">Enregistrer la page</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Formulaire de création d'une nouvelle page #}
+        <section class="pt-12 pl-20 w-4/5">
+            <div class="flex items-center space-x-4">
+                <div class="flex-auto mb-6">
+                    {{ form_label(form.title) }}
+                    {{ form_widget(form.title) }}
+                    <span class="errors">{{ form_errors(form.title) }}</span>
+                </div>
+                <div class="mb-6">
+                    {{ form_label(form.isVisible) }}
+                    <label for="page_isVisible" class="cursor-pointer mt-4">
+                        <div class="relative">
+                            {{ form_widget(form.isVisible, { 'attr': { 'class': 'hidden' }}) }}
+                            <!-- inner line -->
+                            <div class="toggle_line w-10 h-4 bg-gray-200 rounded-full shadow-inner"></div>
+                            <!-- dot -->
+                            <div class="toggle_dot absolute w-6 h-6 bg-white rounded-full shadow inset-y-0 left-0"></div>
+                        </div>
+                    </label>
+                    <span class="errors">{{ form_errors(form.isVisible) }}</span>
+                </div>
+            </div>
+            <div class="mb-6">
+                {{ form_label(form.content) }}
+                {{ form_widget(form.content, { 'attr': { 'rows': 20 }}) }}
+                <span class="errors">{{ form_errors(form.content) }}</span>
+                <span class="block text-sm text-gray-400 mt-1">
+                    Écrire l’article en markdown. Besoin d’aide ?
+                    <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" class="block text-blue-500 group-hover:text-blue-300">
+                        https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
+                    </a>
+                </span>
+            </div>
+        </section>
+    {{ form_end(form) }}
+{% endblock %}

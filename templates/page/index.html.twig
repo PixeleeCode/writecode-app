@@ -1,0 +1,49 @@
+{% extends 'layouts/default/default.html.twig' %}
+
+{% block title %}{{ page.title }} - {{ parent() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('course') }}
+    {{ encore_entry_link_tags('github') }}
+{% endblock %}
+
+{% block body %}
+    <article class="container mx-auto p-6">
+        {% if page.isVisible %}
+            <h1 class="text-4xl font-bold mx-auto xl:mt-12 xl:text-5xl dark:text-white">
+                {{ page.title }}
+            </h1>
+
+            {% if page.content is null %}
+                <div class="my-28">
+                    <p class="text-3xl font-medium dark:text-white">En cours d'écriture 🥸</p>
+                    <p class="text-lg text-gray-500 dark:text-gray-400">
+                        <a href="{{ path('course_index') }}"
+                           title="Accueil" aria-label="Accueil"
+                           class="text-blue-500 hover:text-blue-300 transition ease-in"
+                        >
+                            Retournes à la page d'accueil
+                        </a>
+                    </p>
+                </div>
+            {% else %}
+                <div class="markdown-body py-16 dark:text-white">
+                    {{ page.content|markdown }}
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="my-28">
+                <p class="text-3xl font-medium dark:text-white">Rien... Nada... Comprends pas 😟</p>
+                <p class="text-lg text-gray-500 dark:text-gray-400">
+                    <a href="{{ path('course_index') }}"
+                       title="Accueil" aria-label="Accueil"
+                       class="text-blue-500 hover:text-blue-300 transition ease-in"
+                    >
+                        Retournes à la page d'accueil
+                    </a>
+                </p>
+            </div>
+        {% endif %}
+    </article>
+{% endblock %}

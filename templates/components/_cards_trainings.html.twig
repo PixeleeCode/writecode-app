@@ -1,0 +1,43 @@
+<div class="container mx-auto px-4 pb-12">
+    {% if trainings|length > 0 %}
+        <div class="grid grid-cols-1 gap-12 mb-12 sm:grid-cols-2 sm:gap-x-8 md:grid-cols-3 xl:grid-cols-4">
+            {% for training in trainings|filter(training => training.nb_courses > 1) %}
+                <div class="group">
+                    <a href="{{ path('trainings_show', { slug: training.slug }) }}">
+                        <img
+                            data-controller="symfony--ux-lazy-image--lazy-image"
+                            src="{{ asset('imgs/placeholder.svg') }}"
+                            data-hd-src="{{ asset_image(asset('uploads/trainings/'~ training.picture), { 'w': 350, 'h': 220 }) }}"
+                            alt="{{ training.name }}"
+                            class="rounded-lg w-full"
+                            height="200" width="350"
+                        >
+                    </a>
+                    <p class="my-4">
+                        <a href="{{ path('trainings_show', { slug: training.slug }) }}"
+                           title="{{ training.name }}" aria-label="{{ training.name }}"
+                           class="text-xl font-medium hover:text-red-500 group-hover:text-red-500 transition ease-in dark:text-white"
+                        >
+                            {{ training.name|slice(0, 60) }}
+                        </a>
+                    </p>
+                    <p class="text-gray-400 text-sm dark:text-gray-400">{{ training.nb_courses }} chapitres</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        {{ knp_pagination_render(trainings) }}
+    {% else %}
+        <div class="mt-28">
+            <p class="text-5xl font-bold mb-6 xl:text-6xl dark:text-white">Sacrebleu ! Aucune formation 🥺</p>
+            <p class="text-xl text-gray-500">
+                <a href="{{ path('course_index') }}"
+                   title="Accueil" aria-label="Accueil"
+                   class="text-blue-500 hover:text-blue-300 transition ease-in"
+                >
+                    Retournes à la page d'accueil
+                </a>
+            </p>
+        </div>
+    {% endif %}
+</div>

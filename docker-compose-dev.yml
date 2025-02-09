@@ -1,0 +1,112 @@
+version: '3.3'
+
+services:
+    mysql:
+        container_name: mysql
+        restart: unless-stopped
+        build:
+            context: ./docker/mysql
+        ports:
+            - '3306:3306'
+        environment:
+            MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
+            TZ: Europe/Paris
+        volumes:
+            - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+            - ./docker/mysql/data:/var/lib/mysql
+
+    php:
+        container_name: php-fpm
+        restart: unless-stopped
+        build:
+            context: ./docker/php
+        depends_on:
+            - mysql
+            - redis
+        environment:
+            PHP_IDE_CONFIG: serverName=writecode
+            TZ: Europe/Paris
+            APP_ENV: ${APP_ENV}
+            APP_SECRET: ${APP_SECRET}
+            DATABASE_URL: ${DATABASE_URL}
+            TYPESENSE_KEY: ${TYPESENSE_KEY}
+            TYPESENSE_HOST: ${TYPESENSE_HOST}
+            MESSENGER_TRANSPORT_DSN: ${MESSENGER_TRANSPORT_DSN}
+            MESSENGER_TRANSPORT_FAILED_DSN: ${MESSENGER_TRANSPORT_FAILED_DSN}
+            PHP_OPCACHE_VALIDATE_TIMESTAMPS: ${PHP_OPCACHE_VALIDATE_TIMESTAMPS}
+        volumes:
+            - ./:/var/www:delegated
+            - ./docker/php/conf.d/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
+            - ./docker/php/conf.d/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+            - ./docker/php/conf.d/mysqld.ini:/usr/local/etc/php/conf.d/mysqld.ini
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+
+    typesense:
+        container_name: typesense
+        restart: unless-stopped
+        command: ['php', 'bin/console', 'typesense:create']
+        image: typesense/typesense:0.18.0
+        environment:
+            TYPESENSE_DATA_DIR: /data
+            TYPESENSE_API_KEY: ${TYPESENSE_KEY}
+        volumes:
+            - ./docker/typesense/data:/data
+
+    messenger:
+        container_name: messenger
+        restart: unless-stopped
+        command: ['php', 'bin/console', 'messenger:consume', 'async', '--limit=10', '-vv']
+        build:
+            context: ./docker/messenger
+        depends_on:
+            - redis
+            - mysql
+        environment:
+            PHP_OPCACHE_VALIDATE_TIMESTAMPS: ${PHP_OPCACHE_VALIDATE_TIMESTAMPS}
+            MESSENGER_TRANSPORT_DSN: ${MESSENGER_TRANSPORT_DSN}
+            MESSENGER_TRANSPORT_FAILED_DSN: ${MESSENGER_TRANSPORT_FAILED_DSN}
+        volumes:
+            - ./:/var/www:delegated
+            - ./docker/php/conf.d/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
+
+    nginx:
+        container_name: nginx
+        restart: unless-stopped
+        build:
+            context: ./docker/nginx
+        volumes:
+            - ./:/var/www:delegated
+            - ./docker/nginx/nginx-dev.conf:/etc/nginx/nginx.conf
+            - ./docker/logs:/var/log
+        depends_on:
+            - php
+        ports:
+            - '8080:80'
+
+    redis:
+        container_name: redis
+        restart: unless-stopped
+        image: redis:6-alpine
+
+    # Dev tools
+    redis-gui:
+        container_name: redis-gui
+        image: rediscommander/redis-commander:latest
+        restart: unless-stopped
+        environment:
+            REDIS_HOSTS: local:redis:6379
+        ports:
+            - '8081:8081'
+
+    phpmyadmin:
+        container_name: phpmyadmin
+        image: phpmyadmin/phpmyadmin:latest
+        restart: unless-stopped
+        environment:
+            PMA_PORT: 3306
+            PMA_HOST: mysql
+        depends_on:
+            - mysql
+        ports:
+            - '8089:80'

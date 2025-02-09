@@ -1,0 +1,30 @@
+{% extends 'layouts/default/default.html.twig' %}
+
+{% block title %}{{ trainings ? 'Formations' : 'Formations non trouvées' }} - {{ parent() }}{% endblock %}
+
+{% block body %}
+    {% if trainings|length > 0 %}
+        <header class="container mx-auto mt-6 mb-12 pb-6 border-b border-gray-300 px-4 xl:mt-20 dark:text-white dark:border-gray-500">
+            <h1 class="text-4xl font-bold mb-2 xl:text-5xl">
+                Formations
+            </h1>
+            <p class="text-lg sm:w-2/3 xl:text-xl dark:text-gray-400">
+                Retrouves toutes les formations pour apprendre à développer ou progresser
+            </p>
+        </header>
+        {% include 'components/_cards_trainings.html.twig' with { 'trainings': trainings } only %}
+    {% else %}
+        <div class="mt-28 px-4">
+            <p class="text-5xl font-bold mb-6 xl:text-6xl dark:text-white">Winter is coming...</p>
+            <p class="text-3xl font-medium mb-6 xl:text-4xl dark:text-gray-400">Les formations aussi 😁</p>
+            <p class="text-xl text-gray-500">
+                <a href="{{ path('course_index') }}"
+                   title="Accueil" aria-label="Accueil"
+                   class="text-blue-500 hover:text-blue-300 transition ease-in"
+                >
+                    Retournes à la page d'accueil
+                </a>
+            </p>
+        </div>
+    {% endif %}
+{% endblock %}

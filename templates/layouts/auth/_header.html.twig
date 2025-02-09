@@ -1,0 +1,26 @@
+<nav class="container flex justify-between items-center py-6 px-4">
+    <a href="{{ path('course_index') }}" class="tracking-wide font-light text-gray-800 text-2xl transition ease-in xl:text-3xl dark:text-white">
+        write<span class="text-red-500 font-normal">code</span>
+    </a>
+    {% if app.request.pathinfo is same as('/inscription') %}
+        <div class="flex justify-end items-center w-10/12">
+            <p class="hidden md:inline dark:text-gray-300">Déjà membre ?</p>
+            <a href="{{ path('app_login') }}"
+               title="Se connecter" aria-label="Se connecter"
+               class="text-red-500 hover:text-red-400 transition ease-in ml-2"
+            >
+                Se connecter
+            </a>
+        </div>
+    {% else %}
+        <div class="flex justify-end items-center w-10/12">
+            <p class="hidden md:inline dark:text-gray-300">Pas encore membre ?</p>
+            <a href="{{ path('app_register') }}"
+               title="Ouvrir un compte" aria-label="Ouvrir un compte"
+               class="text-red-500 hover:text-red-400 transition ease-in ml-2"
+            >
+                Ouvrir un compte
+            </a>
+        </div>
+    {% endif %}
+</nav>

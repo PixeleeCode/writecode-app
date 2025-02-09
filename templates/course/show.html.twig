@@ -1,0 +1,160 @@
+{% extends 'layouts/default/default.html.twig' %}
+
+{% block title %}{{ course ? 'Tutoriel : '~ course.title : 'Tutoriel non trouvé' }} - {{ parent() }}{% endblock %}
+
+{% block metas %}
+    <meta name="description" content="{{ course.title }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ absolute_url(path('course_show', { slug: course.slug })) }}">
+    <meta property="og:title" content="{{ course.title }} - WriteCode">
+    <meta property="og:description" content="{{ course.title }}">
+    <meta property="og:image" content="{{ absolute_url(asset('uploads/courses/'~ course.picture)) }}">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ absolute_url(path('course_show', { slug: course.slug })) }}">
+    <meta property="twitter:title" content="{{ course.title }} - WriteCode">
+    <meta property="twitter:description" content="{{ course.title }}">
+    <meta property="twitter:image" content="{{ absolute_url(asset('uploads/courses/'~ course.picture)) }}">
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('github') }}
+    {{ encore_entry_link_tags('course') }}
+{% endblock %}
+
+{% block body %}
+    <article class="container mx-auto px-4 mt-12 xl:mt-20">
+        {% if course|length > 0 %}
+            <h1 class="text-4xl font-bold text-center {{ training is not null and training.chapters|length > 1 ? '' : 'mb-12' }} mx-auto sm:w-2/3 md:text-5xl xl:text-6xl dark:text-white">
+                {{ course.title }}
+            </h1>
+
+            {# Menu déroulant des différents chapitres, si existant #}
+            {% if training is not null and training.chapters|length > 1 %}
+                <div class="w-full text-center my-6">
+                    <div class="relative inline-block group w-6/6 md:w-5/6 xl:w-2/4">
+                        <div class="pb-2">
+                            <button type="button" class="inline-flex justify-center items-center w-full rounded-md px-6 py-4 bg-blue-50 font-medium text-blue-400 uppercase hover:bg-gray-50 hover:text-gray-700 dark:bg-gray-500 dark:hover:bg-gray-600 dark:text-white dark:hover:text-white" id="options-menu" aria-haspopup="true" aria-expanded="true">
+                                Formation {{ training.name }}
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="ml-6 h-5 w-5 justify-end">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="hidden z-10 origin-top-right inset-x-0 w-auto text-left mx-auto absolute rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 group-hover:block dark:bg-gray-500">
+                            <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                                {% for chapter in training.chapters|filter(chapter => chapter.course.draft is same as(false)) %}
+                                    <a href="{{ path('course_show', { slug: chapter.course.slug }) }}"
+                                       title="Chapitre {{ chapter.position }} - {{ chapter.course.title }}"
+                                       aria-label="Chapitre {{ chapter.position }} - {{ chapter.course.title }}"
+                                       class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-white dark:hover:bg-gray-600 dark:hover:text-white {{ app.request.get('slug') is same as(chapter.course.slug) ? 'text-red-500 dark:bg-gray-600': '' }}"
+                                        role="menuitem"
+                                    >
+                                        <span class="font-bold">Chapitre {{ chapter.position }}</span> - {{ chapter.course.title }}
+                                        {% if chapter.course.premium %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="inline-block h-4 w-4 text-yellow-500">
+                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                            </svg>
+                                        {% endif %}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {# Entête de l'article #}
+            <div>
+                <img
+                    data-controller="symfony--ux-lazy-image--lazy-image"
+                    src="{{ asset('imgs/placeholder–961.svg') }}"
+                    data-hd-src="{{ asset_image(asset('uploads/courses/'~ course.picture), { 'w': 975, 'h': 600 }) }}"
+                    alt="{{ course.title }}"
+                    class="rounded-lg mx-auto"
+                    height="600" width="975"
+                >
+                <div class="flex -space-x-2 justify-center -mt-8">
+                    {% for technology in course.technology %}
+                        <a href="{{ path('course_technologie', { slug: technology.slug}) }}"
+                           title="{{ technology.name }}" aria-label="{{ technology.name }}"
+                        >
+                            <img
+                                data-controller="symfony--ux-lazy-image--lazy-image"
+                                src="{{ asset('imgs/placeholder-56.svg') }}"
+                                data-hd-src="{{ asset_image(asset('uploads/technologies/'~ technology.picture), { 'w': 56, 'h': 56 }) }}"
+                                alt="{{ technology.name }}"
+                                class="inline-block bg-gray-50 h-12 w-12 rounded-full ring-2 ring-white sm:h-16 sm:w-16"
+                                height="56" width="56"
+                            >
+                        </a>
+                    {% endfor %}
+                </div>
+                <p class="text-blue-400 uppercase text-center mt-6 mb-8 text-lg">
+                    {{ course.createdAt|format_datetime(pattern='d MMMM Y') }}
+                </p>
+            </div>
+
+            {# Menu administration #}
+            {% if is_granted('ROLE_MODERATOR') %}
+                <div class="text-center">
+                    <a href="{{ path('admin_course_edit', { id: course.id }) }}"
+                       title="Éditer cet article" aria-label="Éditer cet article"
+                       class="btn btn-blue py-3"
+                    >
+                        Éditer cet article
+                    </a>
+                </div>
+            {% endif %}
+
+            {# Article #}
+            <div data-controller="highlight" class="relative markdown-body mx-auto my-12 lg:w-2/3 xl:w-1/2">
+                {% if course.premium and is_premium() is same as(false) %}
+                    <div class="from-white bg-gradient-to-t absolute z-10 inset-0 dark:from-gray-800"></div>
+                    <div class="dark:text-gray-200">{{ course.content|u.truncate(500, '...', false)|markdown }}</div>
+                {% else %}
+                    <span class="dark:text-gray-200">{{ course.content|markdown }}</span>
+                {% endif %}
+            </div>
+
+            {# Abonnement #}
+            {% if course.premium and is_premium() is same as(false) %}
+                <div class="mx-auto pt-16 pb-32 lg:w-2/3 xl:w-1/2">
+                    <h2 class="text-4xl font-bold text-red-500 mb-2">
+                        Envie de lire la suite ?
+                    </h2>
+                    <p class="mb-10 dark:text-white">Pour cela, tu peux débloquer le tutoriel en devenant Premium !</p>
+                    <a href="{{ path('premium_index') }}"
+                       title="Devenir Premium" aria-label="Devenir Premium"
+                       class="btn btn-green py-3 text-lg font-medium"
+                    >
+                        Devenir Premium
+                    </a>
+                    <p class="font-medium mt-10 text-lg dark:text-white">
+                        <strong>Pourquoi devenir Premium ?</strong>
+                    </p>
+                    <p class="dark:text-white">
+                        Cliques sur le bouton au-dessus, je t'explique tout sur la prochaine page 😌.
+                    </p>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="my-28">
+                <p class="text-4xl font-bold mb-6 sm:text-5xl dark:text-white">Euh... ben non 😕</p>
+                <p class="text-lg text-gray-500 sm:text-xl dark:text-gray-400">Pas de tutoriel à cette URL... étrange autant que bizarre...</p>
+                <p class="text-lg text-gray-500 sm:text-xl dark:text-gray-400">
+                    <a href="{{ path('course_index') }}"
+                       title="Accueil" aria-label="Accueil"
+                       class="text-blue-500 hover:text-blue-300 transition ease-in"
+                    >
+                        Retournes à la page d'accueil
+                    </a>
+                </p>
+            </div>
+        {% endif %}
+    </article>
+{% endblock %}

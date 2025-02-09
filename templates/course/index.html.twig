@@ -1,0 +1,8 @@
+{% extends 'layouts/default/default.html.twig' %}
+
+{% block body %}
+    {% include 'components/modal/_success_premium.html.twig' %}
+    {% include 'course/_filters.html.twig' with { 'courses': courses, 'technologies': technologies } only %}
+    {% include 'components/_alert.html.twig' with { 'flashes': app.flashes('success'), 'type': 'success' } only %}
+    {% include 'components/_cards.html.twig' with { 'courses': courses } only %}
+{% endblock %}

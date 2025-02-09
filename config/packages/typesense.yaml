@@ -1,0 +1,26 @@
+acseo_typesense:
+    # Typesense host settings
+    typesense:
+        host: '%env(resolve:TYPESENSE_HOST)%'
+        key: '%env(resolve:TYPESENSE_KEY)%'
+    # Collection settings
+    collections:
+        courses:
+            entity: 'App\Entity\Course'
+            fields:
+                id:
+                    name: id
+                    type: primary
+                title:
+                    name: title
+                    type: string
+                content:
+                    name: content
+                    type: string
+                draft:
+                    name: draft
+                    type: bool
+                createdAt:
+                    name : created_at
+                    type: datetime
+            default_sorting_field: created_at

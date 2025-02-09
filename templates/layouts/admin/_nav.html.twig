@@ -1,0 +1,55 @@
+<nav class="bg-gray-800 h-screen w-20 pt-12">
+    <div class="h-full flex flex-col items-center justify-between pb-12">
+        <div class="flex flex-col items-center justify-start flex-1 space-y-12">
+            <a href="{{ path('admin_course_list') }}" class="{{ app.request.get('_route') in ['admin_course_list', 'admin_course_new', 'admin_course_edit'] ? 'text-red-500' : 'text-gray-400 transition ease-in hover:text-gray-200' }}" title="Les cours">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-8 w-8">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+            </a>
+            <a href="{{ path('admin_training_list') }}" class="{{ app.request.get('_route') in ['admin_training_list', 'admin_training_new', 'admin_training_edit'] ? 'text-red-500' : 'text-gray-400 transition ease-in hover:text-gray-200' }}" title="Les formations">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-8 w-8">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                </svg>
+            </a>
+            <a href="{{ path('admin_technology_list') }}" class="{{ app.request.get('_route') in ['admin_technology_list', 'admin_technology_new', 'admin_technology_edit'] ? 'text-red-500' : 'text-gray-400 transition ease-in hover:text-gray-200' }}" title="Les technologies">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-8 w-8">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
+                </svg>
+            </a>
+            {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('admin_user_list') }}" class="{{ app.request.get('_route') in ['admin_user_list', 'admin_user_edit'] ? 'text-red-500' : 'text-gray-400 transition ease-in hover:text-gray-200' }}" title="Les utilisateurs">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-8 w-8">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                </a>
+                <a href="{{ path('admin_premium_list') }}" class="{{ app.request.get('_route') in ['admin_premium_list', 'admin_premium_new', 'admin_premium_edit'] ? 'text-red-500' : 'text-gray-400 transition ease-in hover:text-gray-200' }}" title="Les utilisateurs">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-8 w-8">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                </a>
+                <a href="{{ path('admin_page_list') }}" class="{{ app.request.get('_route') == 'admin_page_list' ? 'text-red-500' : 'text-gray-400 transition ease-in hover:text-gray-200' }}" title="Pages">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-8 w-8">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                    </svg>
+                </a>
+                <a href="{{ path('admin_messenger_index') }}" class="{{ app.request.get('_route') == 'admin_messenger_index' ? 'text-red-500' : 'text-gray-400 transition ease-in hover:text-gray-200' }}" title="Tâches échouées du messenger">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-8 w-8">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2m-4-1v8m0 0l3-3m-3 3L9 8m-5 5h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293h3.172a1 1 0 00.707-.293l2.414-2.414a1 1 0 01.707-.293H20" />
+                    </svg>
+                </a>
+                <a href="{{ path('admin_throttler_list') }}" class="{{ app.request.get('_route') == 'admin_throttler_list' ? 'text-red-500' : 'text-gray-400 transition ease-in hover:text-gray-200' }}" title="Gestion des bans">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-8 w-8">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                    </svg>
+                </a>
+            {% endif %}
+        </div>
+        <div class="flex flex-col items-center justify-end flex-1 space-y-12">
+            <a href="{{ path('course_index') }}" class="text-red-500 transition ease-in hover:text-red-300" title="Quitter l'administration">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-8 w-8">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+            </a>
+        </div>
+    </div>
+</nav>
